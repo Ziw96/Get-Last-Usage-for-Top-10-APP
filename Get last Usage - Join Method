@@ -1,0 +1,28 @@
+--Method2: Join与groupby，严格定义人数
+SELECT
+	t1.appid,
+	t2.user_id as last_user,
+	t2.scene as last_user_scene,
+	t2.sessionid as last_user_session_id
+from
+(select
+	appid,
+	count(user_id) as visitors,
+	max(last_time) as last_time
+from
+	(
+	Select
+		appid,
+		user_id,
+		max(visit_time) as last_time
+	from user_visit_log
+	where ds = cast(getdate() as date)
+	group by appid,user_id
+	)
+group by appid
+order by visitors desc
+limit 10
+) as t1
+join user_visit_log as t2
+on t1.appid=t2.appid and t1.last_time=t2.visit_time
+where t2.ds = cast(getdate() as date)

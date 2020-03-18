@@ -1,0 +1,20 @@
+--Method1：窗口函数与subquery，以人次作为人数定义
+SELECT
+	appid,
+	user_id as last_user,
+	scene as last_user_scene,
+	sessionid as last_user_session_id
+from
+(
+SELECT
+	*,
+	row_number() over (partition by appid order by visit_time desc) as last_use,
+from user_visit_log
+where ds=CAST(getdate() as date)
+and appid in (
+	select appid from user_visit_log 
+	where ds=CAST(getdate() as date) 
+	group by appid order by count(user_id) desc --目前的count统计的是人次，改成distinct user_id可以统计人数，但是会增加耗时
+	limit 10)
+)
+where last_use=1
