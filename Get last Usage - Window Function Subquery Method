@@ -8,7 +8,7 @@ from
 (
 SELECT
 	*,
-	row_number() over (partition by appid order by visit_time desc) as last_use,
+	row_number() over (partition by appid order by visit_time desc) as last_use
 from user_visit_log
 where ds=CAST(getdate() as date)
 and appid in (
