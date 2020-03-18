@@ -1,7 +1,7 @@
 # Get-Last-Usage-for-Top-10-APP
-For Tecent WXG interview
+准备了两种Query方法，理论上使用window function的方法效率应该会更高
 
-
+原表：
 --表A结构为：
 CREATE TABLE user_visit_log(  
 ds STRING COMMENT '日期 分区字段',  
